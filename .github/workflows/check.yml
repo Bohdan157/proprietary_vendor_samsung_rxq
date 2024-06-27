@@ -21,7 +21,7 @@ jobs:
           - model: "SM-G990B2"
             region: "EUX"
           # ROM (R8Q Romania)
-          - model: "SM-G870G"
+          - model: "SM-G780G"
             region: "ROM"
 
     steps:
