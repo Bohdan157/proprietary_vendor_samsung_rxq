@@ -20,6 +20,9 @@ jobs:
           # EUX OMC (R9Q2_EUX_B2)
           - model: "SM-G990B2"
             region: "EUX"
+          # ROM (R8Q Romania)
+          - model: "SM-G870G"
+            region: "ROM"
 
     steps:
       - name: Checkout repo
@@ -68,6 +71,8 @@ jobs:
               imei="353718681234563"
           elif [[ "${{ matrix.model }}" == "SM-G990B2" ]]; then
               imei="350370851234560"
+          elif [[ "${{ matrix.model }}" == "SM-G780G" ]]; then
+              imei="350952831234560"
           fi
           samfirm -m ${{ matrix.model }} -r ${{ matrix.region }} -i $imei
 
