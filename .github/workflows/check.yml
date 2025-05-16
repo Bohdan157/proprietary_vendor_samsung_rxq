@@ -14,15 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # EUX OMC (R9Q_EUX_B)
-          - model: "SM-G990B"
-            region: "EUX"
           # EUX OMC (R9Q2_EUX_B2)
           - model: "SM-G990B2"
             region: "EUX"
-          # ROM (R8Q Romania)
-          - model: "SM-G780G"
-            region: "ROM"
 
     steps:
       - name: Checkout repo
@@ -118,11 +112,6 @@ jobs:
           tar cvf ${{ env.latest_shortversion }}_kernel.tar *.lz4
           rm *.lz4
 
-      - name: Extract PIT file
-        if: env.need_update == 1
-        run: |
-          tar --wildcards --exclude='*/*' -xvf ${{ env.csc_tar }} '*.pit'
-          echo "pit_file=`find -name *.pit`" >> $GITHUB_ENV
 
       - name: Generate patched vbmeta
         if: env.need_update == 1
@@ -133,21 +122,6 @@ jobs:
           printf "$(printf '\\x%02X' 3)" | dd of="vbmeta.img" bs=1 seek=123 count=1 conv=notrunc &> /dev/null
           tar cvf ${{ env.latest_shortversion }}_patched_vbmeta.tar vbmeta.img
           rm vbmeta.img
-
-      - name: Extract vendor partition
-        if: env.need_update == 1
-        run: |
-          tar xvf ${{ env.ap_tar }} super.img.lz4
-          lz4 -d super.img.lz4 super.img
-          rm super.img.lz4
-          simg2img super.img super_raw.img
-          rm super.img
-          mv super_raw.img super.img
-          python3 tools/bin/lpunpack.py -p vendor super.img .
-          rm super.img
-          [[ -e vendor.img.ext4 ]] && mv vendor.img.ext4 vendor.img
-          [[ -e vendor.img ]] && zip ${{ env.latest_shortversion }}_vendor.zip vendor.img
-          [[ -e vendor.img ]] && rm vendor.img
 
       - name: Update current version
         if: env.need_update == 1
@@ -181,6 +155,4 @@ jobs:
             ${{ env.cp_tar }}
             ${{ env.home_csc_tar }}
             ${{ env.latest_shortversion }}_kernel.tar
-            ${{ env.pit_file }}
             ${{ env.latest_shortversion }}_patched_vbmeta.tar
-            ${{ env.latest_shortversion }}_vendor.zip
