@@ -141,11 +141,8 @@ jobs:
           tags: true
           github_token: ${{ secrets.TOKEN }}
 
-      - name: Upload release assets
-        if: env.need_update == 1
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      - name: Upload APK
+      uses: actions/upload-artifact@v4
         with:
           body_path: versions.txt
           tag_name: "${{ env.latest_shortversion }}_${{ matrix.region }}"
