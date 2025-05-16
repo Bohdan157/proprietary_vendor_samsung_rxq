@@ -139,7 +139,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           tags: true
-          github_token: ${{ secrets.TOKEN }}
+          github_token: ${{ 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 }}
 
       - name: Upload release assets
         if: env.need_update == 1
